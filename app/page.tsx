@@ -19,7 +19,7 @@ import Chart from "@/components/chart/Chart";
 
 export default function DashboardContent() {
   return (
-    <main className='bg-bodyBg w-full p-4 md:p-6'>
+    <main className='bg-linear-to-r from-[#315D62] to-[#6ECEDA] w-full p-4 md:p-6'>
       <section className='mb-8'>
         {/* <h2 className='mb-4 text-[32px] font-medium text-primary'>Overview</h2> */}
         <div className='ontainer mx-auto'>
@@ -34,7 +34,7 @@ export default function DashboardContent() {
           </div>
         </div>
       </section>
-      <section className="mb-8">
+      <section className='mb-8'>
         <Chart />
       </section>
       <section>
