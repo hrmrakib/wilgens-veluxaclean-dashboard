@@ -14,6 +14,8 @@ import {
 import { useState } from "react";
 import UserDetailsModal from "@/components/user-details-modal";
 import Image from "next/image";
+import ReactApexChart from "react-apexcharts";
+import Chart from "@/components/chart/Chart";
 
 export default function DashboardContent() {
   return (
@@ -23,16 +25,18 @@ export default function DashboardContent() {
         <div className='ontainer mx-auto'>
           <div className='flex items-center gap-14 flex-wrap'>
             <StatCard title='Total User' value='520' icon='/user.png' />
-            {/* <StatCard
+            <StatCard
               title='Total Earnings'
               value='$12300'
               icon='/earning.png'
-            /> */}
+            />
             {/* <StatCard title='Total Subscriptions' value='1430' /> */}
           </div>
         </div>
       </section>
-
+      <section className="mb-8">
+        <Chart />
+      </section>
       <section>
         {/* <h2 className='mb-4 text-[28px] font-medium text-primary'>
           Transaction
@@ -72,6 +76,9 @@ function StatCard({ title, value, icon }: StatCardProps) {
     </Card>
   );
 }
+
+// const domContainer = document.querySelector('#app');
+// ReactDOM.render(<ApexChart />, domContainer);
 
 function TransactionTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);

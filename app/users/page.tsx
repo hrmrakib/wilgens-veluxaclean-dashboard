@@ -240,19 +240,19 @@ function TransactionTable() {
             <TableBody>
               {users?.map((user: IUser) => (
                 <TableRow key={user?.id}>
-                  <TableCell className='font-medium text-lg text-[#B0B0B0] text-center'>
+                  <TableCell className='font-medium text-lg text-tableRowColor text-center'>
                     {user?.id}
                   </TableCell>
-                  <TableCell className='text-lg text-[#B0B0B0] text-center'>
+                  <TableCell className='text-lg text-tableRowColor text-center'>
                     {user?.full_name}
                   </TableCell>
-                  <TableCell className='text-lg text-[#B0B0B0] text-center'>
+                  <TableCell className='text-lg text-tableRowColor text-center'>
                     {user?.email}
                   </TableCell>
-                  <TableCell className='text-lg text-[#B0B0B0] text-center'>
+                  <TableCell className='text-lg text-tableRowColor text-center'>
                     {user?.created_on.split("T")[0]}
                   </TableCell>
-                  <TableCell className='text-lg text-[#B0B0B0] text-center'>
+                  <TableCell className='text-lg text-tableRowColor text-center'>
                     <Button
                       variant='ghost'
                       size='sm'

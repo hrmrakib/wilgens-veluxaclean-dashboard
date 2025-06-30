@@ -9,9 +9,8 @@ export default function PrivacyPolicyPage() {
 
   if (isLoading) return <div>Loading...</div>;
 
-
   return (
-    <div className='flex min-h-screen bg-transparent text-primary'>
+    <div className='flex w-full min-h-screen bg-linear-to-r from-[#315D62] to-[#6ECEDA] p-4 sm:p-6 lg:p-8 text-primary'>
       <div className='flex-1 w-full'>
         <main className='w-full p-4 md:p-6'>
           <div className='max-w-3xl mx-auto'>
@@ -48,7 +47,20 @@ export default function PrivacyPolicyPage() {
                 />
               ) : (
                 // <p>Loading content...</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla autem nobis fugiat, dicta nostrum praesentium illum nemo. Voluptatem voluptate reiciendis eius sed incidunt quae? Placeat quisquam nihil unde corrupti minima quibusdam, facere consequuntur dolore animi excepturi iusto nobis reiciendis iste dolor ducimus sequi minus dolores sapiente odio pariatur. Ratione unde consequuntur eum! Delectus ipsum voluptate illum minima, eum et neque hic laboriosam dolorum esse, perferendis, consequatur quidem ipsa exercitationem totam rerum amet expedita beatae alias quo eveniet vel? Eveniet ducimus facere repellat fuga dolorum praesentium hic tempora quidem dolor enim.</p>
+                <p>
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                  Nulla autem nobis fugiat, dicta nostrum praesentium illum
+                  nemo. Voluptatem voluptate reiciendis eius sed incidunt quae?
+                  Placeat quisquam nihil unde corrupti minima quibusdam, facere
+                  consequuntur dolore animi excepturi iusto nobis reiciendis
+                  iste dolor ducimus sequi minus dolores sapiente odio pariatur.
+                  Ratione unde consequuntur eum! Delectus ipsum voluptate illum
+                  minima, eum et neque hic laboriosam dolorum esse, perferendis,
+                  consequatur quidem ipsa exercitationem totam rerum amet
+                  expedita beatae alias quo eveniet vel? Eveniet ducimus facere
+                  repellat fuga dolorum praesentium hic tempora quidem dolor
+                  enim.
+                </p>
               )}
             </div>
           </div>

@@ -120,7 +120,7 @@ export default function Home() {
           </div>
 
           {/* Premium Plan */}
-          <div className='max-w-md bg-gradient-to-b from-[#1B1B1B] via-[#373737] to-[#373737] rounded-lg border border-[#676767] overflow-hidden'>
+          <div className='max-w-md bg-gradient-to-b from-[#5badb7] via-[#315D62] to-[#315D62] rounded-lg border border-[#676767] overflow-hidden'>
             <div className='px-6 py-8 flex flex-col items-center gap-3'>
               <h3 className='text-primary text-center text-xl font-semibold'>
                 Premium Plan

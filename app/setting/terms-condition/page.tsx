@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 
 export default function TermsConditionPage() {
   return (
-    <div className='flex min-h-screen bg-gray-50'>
+    <div className='flexw-full min-h-screen bg-linear-to-r from-[#315D62] to-[#6ECEDA] p-4 sm:p-6 lg:p-8'>
       <div className='flex-1 w-full'>
         <main className='w-full p-4 md:p-6'>
           <div className='max-w-3xl mx-auto'>

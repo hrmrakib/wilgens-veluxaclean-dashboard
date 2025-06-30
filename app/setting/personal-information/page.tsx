@@ -97,7 +97,7 @@ export default function PersonalInformationPage() {
                   <div className='justify-self-end'>
                     <Link
                       href='/setting/personal-information/edit'
-                      className='flex items-center gap-2 bg-button px-5 py-2 rounded-3xl font-medium text-secondary'
+                      className='flex items-center gap-2 bg-button px-5 py-2 rounded-3xl font-medium text-buttonColor'
                     >
                       <span>Edit Profile</span>
                       <Edit className='h-4 w-4' />

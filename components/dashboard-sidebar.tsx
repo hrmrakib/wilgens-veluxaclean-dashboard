@@ -88,41 +88,19 @@ export default function DashboardSidebar() {
               />
 
               <NavItem
-                href='/subscription'
-                icon={BadgeAlert}
-                label='Subscription'
-                active={
-                  pathname === "/subscription" ||
-                  pathname.startsWith("/subscription")
-                }
-              />
-
-              <NavItem
-                href='/videos'
+                href='/services'
                 icon={Settings}
-                label='Videos'
+                label='Services'
                 active={
-                  pathname === "/videos" || pathname.startsWith("/videos/")
+                  pathname === "/services" || pathname.startsWith("/services/")
                 }
               />
 
               <NavItem
-                href='/live-classes'
+                href='/blog'
                 icon={Users}
-                label='Live Classes'
-                active={
-                  pathname === "/live-classes" ||
-                  pathname.startsWith("/live-classes/")
-                }
-              />
-
-              <NavItem
-                href='/train-ai'
-                icon={BadgeAlert}
-                label='Train AI'
-                active={
-                  pathname === "/train-ai" || pathname.startsWith("/train-ai")
-                }
+                label='Blog'
+                active={pathname === "/blog" || pathname.startsWith("/blog/")}
               />
 
               <NavItem
@@ -171,7 +149,7 @@ export default function DashboardSidebar() {
                 />
               </svg>
 
-              <span className='text-primary text-lg font-semibold'>
+              <span className='text-[#FE504E] text-lg font-semibold'>
                 Log out
               </span>
             </button>
@@ -203,12 +181,14 @@ function NavItem({ href, icon: Icon, label, active }: NavItemProps) {
           className={cn(
             "flex items-center gap-3 px-4 !py-5 transition-colors rounded-full",
             active
-              ? "bg-[#0249E1] text-sidebarColor"
-              : "text-sidebarColor hover:bg-[#0249E1] hover:text-[#fff]"
+              ? "bg-sidebarLinkBg text-sidebarActiveColor"
+              : "text-sidebarColor hover:bg-sidebarLinkBg hover:text-[#fff]"
           )}
         >
           <Icon size={18} />
-          <span className={`text-lg ${active ? "text-sidebarColor" : ""}`}>
+          <span
+            className={`text-lg ${active ? "text-sidebarActiveColor" : ""}`}
+          >
             {label}
           </span>
         </Link>
