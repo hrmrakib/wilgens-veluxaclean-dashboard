@@ -8,6 +8,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useLoginMutation } from "@/redux/feature/authAPI";
 import { useRouter } from "next/navigation";
 import { saveTokens } from "@/service/authService";
+import { toast } from "sonner";
 
 export default function SignInPage() {
   const [formData, setFormData] = useState({
@@ -71,14 +72,15 @@ export default function SignInPage() {
         password: formData.password,
       });
 
-      if (res?.data?.status === "success") {
-        localStorage.setItem("access_token", res?.data?.access_token);
-        await saveTokens(res?.data?.token);
+      console.log(res?.data?.success);
+      if (res?.data?.success) {
+        toast.success(res?.data?.message);
+        localStorage.setItem("access_token", res?.data?.data?.accessToken);
+        localStorage.setItem("refresh_token", res?.data?.data?.refreshToken);
+        await saveTokens(res?.data?.data?.accessToken);
         // setSubmitSuccess(true);
         router.push("/");
       }
-
-      // setSubmitSuccess(true);
 
       // In a real app, you would redirect to dashboard or home page after successful login
     } catch (error) {
@@ -104,10 +106,10 @@ export default function SignInPage() {
         {/* Form Section */}
         <div className='w-full md:w-1/2 max-w-lg mx-auto bg-authFormBg px-6 py-16 rounded-xl'>
           <div className='text-center mb-6'>
-            <h1 className='text-[32px] font-bold text-primary mb-2'>
+            <h1 className='text-[32px] font-bold text-authFormColor mb-2'>
               Sign In Now
             </h1>
-            <p className='text-primary text-lg'>
+            <p className='text-authFormColor text-lg'>
               Welcome back! Select method log in
             </p>
           </div>
@@ -146,7 +148,7 @@ export default function SignInPage() {
                   placeholder='Enter your email...'
                   value={formData.email}
                   onChange={handleChange}
-                  className={`bg-inputBg text-primary pl-12 w-full p-3  placeholder:text-[#B0B0B0] ${
+                  className={`bg-inputBg text-authFormColor pl-12 w-full p-3  placeholder:text-[#B0B0B0] ${
                     errors.email ? "border-red-500" : "border-slate-300"
                   } rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   required
@@ -183,7 +185,7 @@ export default function SignInPage() {
                     placeholder='Enter your password...'
                     value={formData.password}
                     onChange={handleChange}
-                    className={`bg-inputBg text-primary pl-12 w-full p-3  placeholder:text-[#B0B0B0] ${
+                    className={`bg-inputBg text-authFormColor pl-12 w-full p-3  placeholder:text-[#B0B0B0] ${
                       errors.password ? "border-red-500" : "border-slate-300"
                     } rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     required
@@ -210,14 +212,14 @@ export default function SignInPage() {
                   />
                   <label
                     htmlFor='remember'
-                    className='ml-2 text-lg text-primary font-medium'
+                    className='ml-2 text-lg text-authFormColor font-medium'
                   >
                     Remember
                   </label>
                 </div>
                 <Link
                   href='/forget-password'
-                  className='text-lg font-medium text-primary hover:underline'
+                  className='text-lg font-medium text-authFormColor hover:underline'
                 >
                   Forget Password?
                 </Link>

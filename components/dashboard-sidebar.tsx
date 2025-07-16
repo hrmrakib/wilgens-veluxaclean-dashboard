@@ -32,16 +32,16 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import LogoutModal from "./logout-modal";
 import { useState } from "react";
+import { logout } from "@/service/authService";
 
 export default function DashboardSidebar() {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleLogout = () => {
-    // Perform logout actions here (clear tokens, etc.)
-    // Redirect to login page
-    router.push("/login");
+  const handleLogout = async () => {
+    await logout();
+    router.push("/signin");
   };
 
   if (

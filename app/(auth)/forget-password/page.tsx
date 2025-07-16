@@ -4,7 +4,10 @@ import type React from "react";
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { useSendOtpMutation } from "@/redux/feature/authAPI";
+import {
+  useForgotPasswordMutation,
+  useSendOtpMutation,
+} from "@/redux/feature/authAPI";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -15,7 +18,7 @@ export default function ForgetPassword() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const router = useRouter();
 
-  const [sendOtp] = useSendOtpMutation();
+  const [forgotPassword] = useForgotPasswordMutation();
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -30,16 +33,19 @@ export default function ForgetPassword() {
     if (!validateForm()) {
       return;
     }
+
     setIsSubmitting(true);
 
     try {
-      const response = await sendOtp({ email }).unwrap();
+      const response = await forgotPassword({ email }).unwrap();
 
-      if (response.status === "success") {
+      console.log(response);
+
+      if (response?.success) {
         localStorage.setItem("email", email);
         toast.success("OTP sent successfully!");
         setSubmitSuccess(true);
-        router.push("/verify-otp");
+        router.push(`/verify-otp/?email=${email}`);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -57,10 +63,10 @@ export default function ForgetPassword() {
         {/* Form Section */}
         <div className='w-full md:w-1/2 max-w-lg mx-auto bg-authFormBg px-6 py-16 rounded-xl'>
           <div className='text-center mb-6'>
-            <h1 className='text-[32px] font-bold text-primary mb-2'>
+            <h1 className='text-[32px] font-bold text-authFormColor mb-2'>
               Forget Your Password
             </h1>
-            <p className='text-primary text-lg'>
+            <p className='text-authFormColor text-lg'>
               Enter your email address to reset your password.
             </p>
           </div>
@@ -99,7 +105,7 @@ export default function ForgetPassword() {
                   placeholder='Enter your email...'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className={`bg-inputBg text-primary pl-12 w-full p-3  placeholder:text-[#B0B0B0] ${
+                  className={`bg-inputBg text-authFormColor pl-12 w-full p-3  placeholder:text-[#B0B0B0] ${
                     errors.email ? "border-red-500" : "border-slate-300"
                   } rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   required
@@ -121,11 +127,11 @@ export default function ForgetPassword() {
           )}
 
           <div className='text-center mt-6'>
-            <p className='text-primary text-lg'>
+            <p className='text-authFormColor text-lg'>
               Back to{" "}
               <Link
                 href='/signin'
-                className='text-primary text-lg font-medium hover:underline'
+                className='text-authFormColor text-lg font-medium hover:underline'
               >
                 Sign In
               </Link>
