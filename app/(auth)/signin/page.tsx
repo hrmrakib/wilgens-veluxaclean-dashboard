@@ -72,11 +72,12 @@ export default function SignInPage() {
         password: formData.password,
       });
 
-      console.log(res?.data?.success);
+      console.log(res);
+
       if (res?.data?.success) {
         toast.success(res?.data?.message);
-        localStorage.setItem("access_token", res?.data?.data?.accessToken);
-        localStorage.setItem("refresh_token", res?.data?.data?.refreshToken);
+        localStorage.setItem("accessToken", res?.data?.data?.accessToken);
+        localStorage.setItem("refreshToken", res?.data?.data?.refreshToken);
         await saveTokens(res?.data?.data?.accessToken);
         // setSubmitSuccess(true);
         router.push("/");

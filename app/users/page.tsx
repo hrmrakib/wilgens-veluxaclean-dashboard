@@ -19,10 +19,14 @@ import {
 import DetailRow from "@/components/DetailRow";
 
 interface IUser {
-  id: number;
-  full_name: string;
+  _id: string;
+  name: string;
   email: string;
-  created_on: string;
+  role: "USER" | "ADMIN";
+  verified: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 export default function DashboardContent() {
@@ -40,7 +44,9 @@ function TransactionTable() {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Configurable items per page
-  // const { data: users, isLoading } = useGetAllUsersQuery({});
+  const { data: users, isLoading } = useGetAllUsersQuery({});
+
+  console.log(users?.data?.data);
 
   const transactions = [
     {
@@ -129,68 +135,68 @@ function TransactionTable() {
     },
   ];
 
-  const users = [
-    {
-      id: 1,
-      full_name: "Rakib Hasan",
-      email: "rakib@example.com",
-      created_on: "2025-06-01T10:23:00Z",
-    },
-    {
-      id: 2,
-      full_name: "Fatema Akter",
-      email: "fatema@example.com",
-      created_on: "2025-05-21T14:45:00Z",
-    },
-    {
-      id: 3,
-      full_name: "Arif Mahmud",
-      email: "arif@example.com",
-      created_on: "2025-06-15T08:30:00Z",
-    },
-    {
-      id: 4,
-      full_name: "Nusrat Jahan",
-      email: "nusrat@example.com",
-      created_on: "2025-06-10T12:10:00Z",
-    },
-    {
-      id: 5,
-      full_name: "Sakib Rahman",
-      email: "sakib@example.com",
-      created_on: "2025-06-03T09:00:00Z",
-    },
-    {
-      id: 6,
-      full_name: "Mehedi Hasan",
-      email: "mehedi@example.com",
-      created_on: "2025-06-19T11:15:00Z",
-    },
-    {
-      id: 7,
-      full_name: "Shorna Akter",
-      email: "shorna@example.com",
-      created_on: "2025-06-20T16:50:00Z",
-    },
-    {
-      id: 8,
-      full_name: "Jannatul Ferdous",
-      email: "jannatul@example.com",
-      created_on: "2025-06-11T10:00:00Z",
-    },
-    {
-      id: 9,
-      full_name: "Tanvir Alam",
-      email: "tanvir@example.com",
-      created_on: "2025-06-05T13:40:00Z",
-    },
-    {
-      id: 10,
-      full_name: "Mahia Islam",
-      email: "mahia@example.com",
-      created_on: "2025-06-08T17:25:00Z",
-    },
-  ];
+  // const users = [
+  //   {
+  //     id: 1,
+  //     full_name: "Rakib Hasan",
+  //     email: "rakib@example.com",
+  //     created_on: "2025-06-01T10:23:00Z",
+  //   },
+  //   {
+  //     id: 2,
+  //     full_name: "Fatema Akter",
+  //     email: "fatema@example.com",
+  //     created_on: "2025-05-21T14:45:00Z",
+  //   },
+  //   {
+  //     id: 3,
+  //     full_name: "Arif Mahmud",
+  //     email: "arif@example.com",
+  //     created_on: "2025-06-15T08:30:00Z",
+  //   },
+  //   {
+  //     id: 4,
+  //     full_name: "Nusrat Jahan",
+  //     email: "nusrat@example.com",
+  //     created_on: "2025-06-10T12:10:00Z",
+  //   },
+  //   {
+  //     id: 5,
+  //     full_name: "Sakib Rahman",
+  //     email: "sakib@example.com",
+  //     created_on: "2025-06-03T09:00:00Z",
+  //   },
+  //   {
+  //     id: 6,
+  //     full_name: "Mehedi Hasan",
+  //     email: "mehedi@example.com",
+  //     created_on: "2025-06-19T11:15:00Z",
+  //   },
+  //   {
+  //     id: 7,
+  //     full_name: "Shorna Akter",
+  //     email: "shorna@example.com",
+  //     created_on: "2025-06-20T16:50:00Z",
+  //   },
+  //   {
+  //     id: 8,
+  //     full_name: "Jannatul Ferdous",
+  //     email: "jannatul@example.com",
+  //     created_on: "2025-06-11T10:00:00Z",
+  //   },
+  //   {
+  //     id: 9,
+  //     full_name: "Tanvir Alam",
+  //     email: "tanvir@example.com",
+  //     created_on: "2025-06-05T13:40:00Z",
+  //   },
+  //   {
+  //     id: 10,
+  //     full_name: "Mahia Islam",
+  //     email: "mahia@example.com",
+  //     created_on: "2025-06-08T17:25:00Z",
+  //   },
+  // ];
 
   // Calculate pagination
   const totalPages = Math.ceil(transactions.length / itemsPerPage);
@@ -220,13 +226,13 @@ function TransactionTable() {
             <TableHeader className='bg-tableHeaderBg hover:!bg-tableHeaderBg text-[#FFF] py-8'>
               <TableRow className='py-8'>
                 <TableHead className='text-[#FFF] text-lg text-center'>
-                  #Tr.ID
+                  ID
                 </TableHead>
                 <TableHead className='text-[#FFF] text-lg text-center'>
                   User Name
                 </TableHead>
                 <TableHead className='text-[#FFF] text-lg text-center'>
-                  Subscription
+                  Email
                 </TableHead>
                 <TableHead className='text-[#FFF] text-lg text-center'>
                   Join Date
@@ -238,19 +244,19 @@ function TransactionTable() {
             </TableHeader>
 
             <TableBody>
-              {users?.map((user: IUser) => (
-                <TableRow key={user?.id}>
+              {users?.data?.data?.map((user: IUser, index: number) => (
+                <TableRow key={user?._id}>
                   <TableCell className='font-medium text-lg text-tableRowColor text-center'>
-                    {user?.id}
+                    {index + 1}
                   </TableCell>
                   <TableCell className='text-lg text-tableRowColor text-center'>
-                    {user?.full_name}
+                    {user?.name}
                   </TableCell>
                   <TableCell className='text-lg text-tableRowColor text-center'>
                     {user?.email}
                   </TableCell>
                   <TableCell className='text-lg text-tableRowColor text-center'>
-                    {user?.created_on.split("T")[0]}
+                    {user?.createdAt.split("T")[0]}
                   </TableCell>
                   <TableCell className='text-lg text-tableRowColor text-center'>
                     <Button
@@ -357,18 +363,9 @@ function TransactionTable() {
             </h2>
 
             <div className='space-y-6'>
-              <DetailRow label='User ID:' value={selectedUser?.id} />
+              <DetailRow label='User ID:' value={selectedUser?._id} />
               <DetailRow label='Email' value={selectedUser?.email} />
-              <DetailRow label='User Name' value={selectedUser?.full_name} />
-              <DetailRow label='Transaction Amount' value={"amount"} />
-              <DetailRow
-                label='Subscription Status'
-                value={selectedUser?.subscription_status}
-              />
-              <DetailRow
-                label='Package Name'
-                value={selectedUser?.package_name}
-              />
+              <DetailRow label='User Name' value={selectedUser?.name} />
             </div>
 
             <Button

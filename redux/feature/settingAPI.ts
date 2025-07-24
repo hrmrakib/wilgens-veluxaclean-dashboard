@@ -8,7 +8,7 @@ const settingAPI = baseApi.injectEndpoints({
         url: `/api-auth/user_profile/`,
         method: "GET",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       }),
       providesTags: ["Profile"],
@@ -19,7 +19,7 @@ const settingAPI = baseApi.injectEndpoints({
         url: `/api-auth/update_profile/`,
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         body: data,
       }),
@@ -31,7 +31,7 @@ const settingAPI = baseApi.injectEndpoints({
         url: `/api-auth/change_password/`,
         method: "POST",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         body: data,
       }),
@@ -42,7 +42,7 @@ const settingAPI = baseApi.injectEndpoints({
         url: `/dicipline/terms-conditions/`,
         method: "GET",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       }),
     }),
@@ -53,7 +53,7 @@ const settingAPI = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       }),
     }),
@@ -62,7 +62,7 @@ const settingAPI = baseApi.injectEndpoints({
       query: () => ({
         url: `/api-apps/privacy_policies/`,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         method: "GET",
       }),
@@ -73,7 +73,7 @@ const settingAPI = baseApi.injectEndpoints({
         url: `/api-apps/privacy_policies/`,
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         body: data,
       }),
@@ -84,7 +84,7 @@ const settingAPI = baseApi.injectEndpoints({
         url: `/dicipline/trust-safety/`,
         method: "GET",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       }),
     }),
@@ -95,7 +95,7 @@ const settingAPI = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       }),
     }),

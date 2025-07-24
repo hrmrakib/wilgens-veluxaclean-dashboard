@@ -4,9 +4,9 @@ const authAPI = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllUsers: builder.query<any, any>({
       query: () => ({
-        url: "/api-auth/all_user_list/",
+        url: "/user/get-all-users",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         method: "GET",
       }),
@@ -16,7 +16,7 @@ const authAPI = baseApi.injectEndpoints({
       query: (id) => ({
         url: `/api-auth/single_user/${id}`,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         method: "GET",
       }),

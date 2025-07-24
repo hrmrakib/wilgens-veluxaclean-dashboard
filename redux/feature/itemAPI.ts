@@ -6,7 +6,7 @@ const authAPI = baseApi.injectEndpoints({
       query: (id) => ({
         url: `/api-apps/ViewAllItems/?service_id=${id}`,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         method: "GET",
       }),
@@ -18,7 +18,7 @@ const authAPI = baseApi.injectEndpoints({
         method: "POST",
         body: data,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       }),
     }),

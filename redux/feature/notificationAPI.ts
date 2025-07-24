@@ -8,7 +8,7 @@ const notificationAPI = baseApi.injectEndpoints({
       query: () => ({
         url: "/api-apps/ViewAllNotification/",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         method: "GET",
       }),
@@ -19,7 +19,7 @@ const notificationAPI = baseApi.injectEndpoints({
         url: "/api-apps/AddNotification/",
         method: "POST",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         body,
       }),

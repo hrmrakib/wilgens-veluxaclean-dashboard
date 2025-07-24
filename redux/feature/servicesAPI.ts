@@ -5,9 +5,9 @@ const authAPI = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllServices: builder.query<any, any>({
       query: () => ({
-        url: "/api-apps/ViewAllServices/",
+        url: "/service/get-all-service",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         method: "GET",
       }),
@@ -15,9 +15,9 @@ const authAPI = baseApi.injectEndpoints({
 
     getServiceById: builder.query<any, string>({
       query: (id) => ({
-        url: `/api-apps/ViewSingleService/?service_id=${id}`,
+        url: `/service/get-details/${id}`,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         method: "GET",
       }),
@@ -27,7 +27,7 @@ const authAPI = baseApi.injectEndpoints({
       query: (data) => ({
         url: "/api-apps/AddNewService/",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         method: "POST",
         body: data,
@@ -36,20 +36,20 @@ const authAPI = baseApi.injectEndpoints({
 
     updateService: builder.mutation<any, { data: any; id: string }>({
       query: ({ data, id }) => ({
-        url: `/api-apps/UpdateService/?service_id=${id}`,
+        url: `/service/update-service/${id}`,
         method: "PATCH",
         body: data,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       }),
     }),
 
     deleteService: builder.mutation<any, string>({
       query: (id) => ({
-        url: `/api-apps/DeleteService/?service_id=${id}`,
+        url: `/service/delete-service/${id}`,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         method: "DELETE",
       }),
@@ -59,7 +59,7 @@ const authAPI = baseApi.injectEndpoints({
       query: (id) => ({
         url: `/api-apps/ViewAllItems/?service_id=${id}`,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
         method: "GET",
       }),
