@@ -25,7 +25,7 @@ const authAPI = baseApi.injectEndpoints({
 
     createService: builder.mutation<any, any>({
       query: (data) => ({
-        url: "/api-apps/AddNewService/",
+        url: "/service/create-service",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
