@@ -79,6 +79,7 @@ export default function CreateBlogPage() {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      console.log(file);
       if (file.type.startsWith("image/")) {
         setUploadedFile(file);
         setImagePreview(null);
@@ -106,22 +107,9 @@ export default function CreateBlogPage() {
     const formDataToSend = new FormData();
 
     formDataToSend.append("data", JSON.stringify(blogData));
-
     if (uploadedFile) {
       formDataToSend.append("image", uploadedFile);
     }
-
-    // uploadedFiles.forEach((file) => {
-    //   formDataToSend.append("image", file); // backend must handle multiple "image"
-    // });
-
-    // Optional: if imagesToDelete are tracked
-    // const imagesToDelete = blog?.data?.image?.slice(1); // just as an example
-    // if (imagesToDelete && imagesToDelete.length > 0) {
-    //   imagesToDelete.forEach((imgPath) =>
-    //     formDataToSend.append("imagesToDelete[]", imgPath)
-    //   );
-    // }
 
     try {
       const res = await updateBlog({
@@ -142,6 +130,7 @@ export default function CreateBlogPage() {
     }
   };
 
+  console.log({ ...formData  }, "formdata");
   return (
     <div className='w-full min-h-screen bg-linear-to-r from-[#315D62] to-[#6ECEDA] p-4 sm:p-6 lg:p-8'>
       <div className='bg-white w-full rounded-lg p-10'>

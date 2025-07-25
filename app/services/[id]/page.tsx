@@ -261,7 +261,7 @@ export default function CreateCategoryPage() {
       return;
     }
 
-    const categoryData = {
+    const categoryData = {  
       ...formData,
       additionalServices: selectedServices,
     };

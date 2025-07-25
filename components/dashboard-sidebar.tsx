@@ -102,6 +102,12 @@ export default function DashboardSidebar() {
                 label='Blog'
                 active={pathname === "/blog" || pathname.startsWith("/blog/")}
               />
+              <NavItem
+                href='/faq'
+                icon={Users}
+                label='FAQ'
+                active={pathname === "/faq" || pathname.startsWith("/faq/")}
+              />
 
               <NavItem
                 href='/setting'

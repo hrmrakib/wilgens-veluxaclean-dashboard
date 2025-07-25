@@ -3,7 +3,6 @@
 import type React from "react";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
@@ -15,11 +14,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Calendar, CloudUpload, Edit } from "lucide-react";
+import { Plus, Calendar, CloudUpload, Edit, Delete, Trash } from "lucide-react";
 import Image from "next/image";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import Link from "next/link";
-import { useGetBlogsQuery } from "@/redux/feature/blogAPI";
+import {
+  useDeleteBlogMutation,
+  useGetBlogsQuery,
+} from "@/redux/feature/blogAPI";
 
 export interface IBlog {
   _id: string;
@@ -69,7 +71,9 @@ export default function BlogPage() {
     image: null as File | null,
   });
   const [dragActive, setDragActive] = useState(false);
-  const { data: blogs } = useGetBlogsQuery({});
+  const { data: blogs, refetch } = useGetBlogsQuery({});
+  const [deleteBlog] = useDeleteBlogMutation();
+
   console.log(blogs?.data?.result);
   const handleInputChange = (field: string, value: string) => {
     setNewBlog((prev) => ({
@@ -98,11 +102,7 @@ export default function BlogPage() {
       if (file.type.startsWith("image/")) {
         setNewBlog((prev) => ({ ...prev, image: file }));
       } else {
-        toast({
-          title: "Invalid file type",
-          description: "Please upload an image file.",
-          variant: "destructive",
-        });
+        toast("Invalid file type");
       }
     }
   };
@@ -113,22 +113,28 @@ export default function BlogPage() {
       if (file.type.startsWith("image/")) {
         setNewBlog((prev) => ({ ...prev, image: file }));
       } else {
-        toast({
-          title: "Invalid file type",
-          description: "Please upload an image file.",
-          variant: "destructive",
-        });
+        toast("Invalid file type");
       }
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this blog?"
+    );
+    if (!confirmDelete) return;
+
+    const res = await deleteBlog(id);
+
+    if (res?.data?.success) {
+      toast("✅ " + res?.data?.message);
+      refetch();
     }
   };
 
   const handleAddBlog = () => {
     if (!newBlog.title || !newBlog.description || !newBlog.date) {
-      toast({
-        title: "Missing fields",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
+      toast("Missing fields");
       return;
     }
 
@@ -159,18 +165,12 @@ export default function BlogPage() {
 
     setIsDialogOpen(false);
 
-    toast({
-      title: "Blog post created",
-      description: `"${blogPost.title}" has been added successfully!`,
-    });
+    toast("Blog post created");
   };
 
   const handleBlogClick = (slug: string) => {
     // In a real app, this would navigate to the blog post detail page
-    toast({
-      title: "Blog post clicked",
-      description: `Navigating to: ${slug}`,
-    });
+    toast("Blog post clicked");
   };
 
   return (
@@ -225,7 +225,11 @@ export default function BlogPage() {
                   </p>
 
                   {/* EDIT ICON */}
-                  <div className='absolute top-3 right-3  transition-opacity duration-300'>
+                  <div className='absolute top-3 right-3 flex items-center gap-5 transition-opacity duration-300'>
+                    <button onClick={() => handleDelete(post._id)}>
+                      <Trash className='w-6 h-6 text-gray-600' />
+                    </button>
+
                     <Link href={`/blog/edit/${post._id}`}>
                       <Edit className='w-6 h-6 text-gray-600' />
                     </Link>
