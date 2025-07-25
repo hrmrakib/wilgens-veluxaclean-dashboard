@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,8 +10,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { CloudUpload } from "lucide-react";
 import { toast } from "sonner";
-import { useCreateBlogMutation } from "@/redux/feature/blogAPI";
-import { useRouter } from "next/navigation";
+import {
+  useGetBlogByIdQuery,
+  useUpdateBlogMutation,
+} from "@/redux/feature/blogAPI";
+import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function CreateBlogPage() {
   const [formData, setFormData] = useState({
@@ -20,9 +24,24 @@ export default function CreateBlogPage() {
   });
 
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
-  const [createBlog] = useCreateBlogMutation();
   const router = useRouter();
+  const params = useParams();
+  const [updateBlog] = useUpdateBlogMutation();
+
+  const { data: blog, refetch } = useGetBlogByIdQuery(params.id as string);
+
+  useEffect(() => {
+    if (blog?.data) {
+      setFormData({
+        title: blog.data.title,
+        description: blog.data.description,
+      });
+      setUploadedFile(null);
+      setImagePreview(blog.data.image[0]);
+    }
+  }, [blog]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
@@ -50,6 +69,7 @@ export default function CreateBlogPage() {
       const file = e.dataTransfer.files[0];
       if (file.type.startsWith("image/")) {
         setUploadedFile(file);
+        setImagePreview(URL.createObjectURL(file));
       } else {
         toast("Invalid file type");
       }
@@ -61,6 +81,7 @@ export default function CreateBlogPage() {
       const file = e.target.files[0];
       if (file.type.startsWith("image/")) {
         setUploadedFile(file);
+        setImagePreview(null);
       } else {
         toast("Invalid file type");
       }
@@ -69,7 +90,7 @@ export default function CreateBlogPage() {
 
   const handleSave = async () => {
     if (!formData.title.trim()) {
-      toast("Blog name required");
+      toast("Blog title required");
       return;
     }
 
@@ -83,35 +104,99 @@ export default function CreateBlogPage() {
     };
 
     const formDataToSend = new FormData();
+
     formDataToSend.append("data", JSON.stringify(blogData));
+
     if (uploadedFile) {
       formDataToSend.append("image", uploadedFile);
     }
 
-    console.log("Saving blog:", blogData);
+    // uploadedFiles.forEach((file) => {
+    //   formDataToSend.append("image", file); // backend must handle multiple "image"
+    // });
+
+    // Optional: if imagesToDelete are tracked
+    // const imagesToDelete = blog?.data?.image?.slice(1); // just as an example
+    // if (imagesToDelete && imagesToDelete.length > 0) {
+    //   imagesToDelete.forEach((imgPath) =>
+    //     formDataToSend.append("imagesToDelete[]", imgPath)
+    //   );
+    // }
 
     try {
-      const res = await createBlog(formDataToSend).unwrap();
+      const res = await updateBlog({
+        data: formDataToSend,
+        id: params.id as string,
+      }).unwrap();
+
+      console.log(res);
+
       if (res?.success) {
-        toast("❎ Blog Created Successfully!");
+        toast("✅ Blog updated successfully!");
+        refetch();
         router.push("/blog");
       }
-      // Reset form
-      setFormData({
-        title: "",
-        description: "",
-      });
     } catch (error) {
-      toast("✖️ Failed to create blog");
+      toast("✖️ Failed to update blog");
       console.error("Error saving blog:", error);
-    } finally {
-      setFormData({
-        title: "",
-        description: "",
-      });
-      setUploadedFile(null);
     }
   };
+
+  // const handleSave = async () => {
+  //   if (!formData.title.trim()) {
+  //     toast("Blog name required");
+  //     return;
+  //   }
+
+  //   if (!formData.description.trim()) {
+  //     toast("Service details required");
+  //     return;
+  //   }
+
+  //   const blogData = {
+  //     ...formData,
+  //   };
+
+  //   console.log("Saving blog:", { ...blogData });
+  //   const formDataToSend = new FormData();
+
+  //   formDataToSend.append("data", JSON.stringify(blogData));
+
+  //   if (uploadedFile) {
+  //     formDataToSend.append("image", uploadedFile);
+  //   }
+
+  //   console.log("Saving blog:", blogData);
+
+  //   try {
+  //     const res = await updateService({
+  //       data: formDataToSend,
+  //       id: params.id as string,
+  //     }).unwrap();
+
+  //     console.log(res);
+
+  //     if (res?.success) {
+  //       toast("❎ Blog Created Successfully!");
+  //       refetch();
+  //       router.push("/blog");
+  //     }
+  //     // Reset form
+  //     setFormData({
+  //       title: "",
+  //       description: "",
+  //     });
+  //   } catch (error) {
+  //     toast("✖️ Failed to create blog");
+  //     console.error("Error saving blog:", error);
+  //   } finally {
+  //     // setFormData({
+  //     //   title: "",
+  //     //   description: "",
+  //     // });
+  //     // setUploadedFile(null);
+  //   }
+  // };
 
   return (
     <div className='w-full min-h-screen bg-linear-to-r from-[#315D62] to-[#6ECEDA] p-4 sm:p-6 lg:p-8'>
@@ -119,7 +204,7 @@ export default function CreateBlogPage() {
         <Card className='max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden'>
           <div className='bg-gray-50 px-6 sm:px-8 py-4 border-b border-gray-200'>
             <h1 className='text-xl sm:text-2xl font-semibold text-gray-800'>
-              Create New Blog
+              Update Blog
             </h1>
           </div>
 
@@ -187,6 +272,28 @@ export default function CreateBlogPage() {
                   <div className='space-y-4'>
                     <div className='mx-auto w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center'>
                       <CloudUpload className='w-8 h-8 text-teal-500' />
+                    </div>
+
+                    <div className='flex items-center justify-center'>
+                      {imagePreview ? (
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${imagePreview}`}
+                          alt='Uploaded Image'
+                          width={150}
+                          height={150}
+                        />
+                      ) : (
+                        <Image
+                          src={
+                            uploadedFile
+                              ? URL.createObjectURL(uploadedFile)
+                              : ""
+                          }
+                          alt='Uploaded Image'
+                          width={150}
+                          height={150}
+                        />
+                      )}
                     </div>
 
                     <div className='space-y-2'>

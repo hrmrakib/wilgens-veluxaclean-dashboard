@@ -308,7 +308,7 @@ export default function CreateCategoryPage() {
                 >
                   Service Name
                 </Label>
-                <Input
+                <Input 
                   id='serviceName'
                   value={formData.serviceName}
                   onChange={(e) =>

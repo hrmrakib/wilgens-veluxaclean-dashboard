@@ -53,7 +53,7 @@ const authAPI = baseApi.injectEndpoints({
         },
         method: "DELETE",
       }),
-    }),
+    }), 
 
     viewAllItems: builder.query<any, any>({
       query: (id) => ({

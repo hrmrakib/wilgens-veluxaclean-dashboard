@@ -15,22 +15,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Calendar, CloudUpload } from "lucide-react";
+import { Plus, Calendar, CloudUpload, Edit } from "lucide-react";
 import Image from "next/image";
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
+import { useGetBlogsQuery } from "@/redux/feature/blogAPI";
 
-interface BlogPost {
-  id: string;
+export interface IBlog {
+  _id: string;
   title: string;
   description: string;
-  date: string;
-  image: string;
-  slug: string;
+  image: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export default function BlogPage() {
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([
+  const [blogPosts, setBlogPosts] = useState([
     {
       id: "1",
       title: "Window Cleaning",
@@ -68,7 +69,8 @@ export default function BlogPage() {
     image: null as File | null,
   });
   const [dragActive, setDragActive] = useState(false);
-
+  const { data: blogs } = useGetBlogsQuery({});
+  console.log(blogs?.data?.result);
   const handleInputChange = (field: string, value: string) => {
     setNewBlog((prev) => ({
       ...prev,
@@ -130,7 +132,7 @@ export default function BlogPage() {
       return;
     }
 
-    const blogPost: BlogPost = {
+    const blogPost = {
       id: Date.now().toString(),
       title: newBlog.title,
       description: newBlog.description,
@@ -186,125 +188,32 @@ export default function BlogPage() {
                 Add New Blog
               </Link>
             </DialogTrigger>
-            {/* <DialogContent className='sm:max-w-[500px] max-h-[90vh] overflow-y-auto'>
-              <DialogHeader>
-                <DialogTitle>Create New Blog Post</DialogTitle>
-              </DialogHeader>
-              <div className='grid gap-4 py-4'>
-                <div className='grid gap-2'>
-                  <Label htmlFor='title'>Blog Title</Label>
-                  <Input
-                    id='title'
-                    value={newBlog.title}
-                    onChange={(e) => handleInputChange("title", e.target.value)}
-                    placeholder='Enter blog title'
-                  />
-                </div>
-
-                <div className='grid gap-2'>
-                  <Label htmlFor='date'>Publication Date</Label>
-                  <Input
-                    id='date'
-                    type='date'
-                    value={newBlog.date}
-                    onChange={(e) => handleInputChange("date", e.target.value)}
-                  />
-                </div>
-
-                <div className='grid gap-2'>
-                  <Label htmlFor='description'>Description</Label>
-                  <Textarea
-                    id='description'
-                    value={newBlog.description}
-                    onChange={(e) =>
-                      handleInputChange("description", e.target.value)
-                    }
-                    placeholder='Enter blog description'
-                    rows={4}
-                    className='resize-none'
-                  />
-                </div>
-
-                <div className='grid gap-2'>
-                  <Label>Featured Image</Label>
-                  <div
-                    className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-                      dragActive
-                        ? "border-teal-500 bg-teal-50"
-                        : "border-gray-300 hover:border-gray-400"
-                    }`}
-                    onDragEnter={handleDrag}
-                    onDragLeave={handleDrag}
-                    onDragOver={handleDrag}
-                    onDrop={handleDrop}
-                  >
-                    <input
-                      type='file'
-                      accept='image/*'
-                      onChange={handleFileSelect}
-                      className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
-                    />
-
-                    <div className='space-y-2'>
-                      <CloudUpload className='w-8 h-8 text-gray-400 mx-auto' />
-                      {newBlog.image ? (
-                        <p className='text-sm text-teal-600 font-medium'>
-                          {newBlog.image.name}
-                        </p>
-                      ) : (
-                        <div>
-                          <p className='text-sm text-gray-600'>
-                            Drop image here or click to upload
-                          </p>
-                          <p className='text-xs text-gray-400'>
-                            PNG, JPG, JPEG up to 10MB
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className='flex justify-end gap-2'>
-                <Button
-                  variant='outline'
-                  onClick={() => setIsDialogOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleAddBlog}
-                  className='bg-teal-500 hover:bg-teal-600'
-                >
-                  Create Blog Post
-                </Button>
-              </div>
-            </DialogContent> */}
           </Dialog>
         </div>
 
         {/* Blog Posts Grid */}
         <div className='bg-white rounded-2x p-6 sm:p-8'>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8'>
-            {blogPosts.map((post) => (
+            {blogs?.data?.result.map((post: IBlog) => (
               <Card
-                key={post.id}
+                key={post._id}
                 className='overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group'
-                onClick={() => handleBlogClick(post.slug)}
+                onClick={() => handleBlogClick(post?._id)}
               >
                 <div className='aspect-[4/3] relative overflow-hidden'>
                   <Image
-                    src={post.image || "/placeholder.svg"}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${post.image}`}
                     alt={post.title}
-                    fill
-                    className='object-cover group-hover:scale-105 transition-transform duration-300'
+                    width={500}
+                    height={500}
+                    className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
                   />
                 </div>
-                <CardContent className='p-6'>
+
+                <CardContent className='p-6 relative'>
                   <div className='flex items-center gap-2 text-sm text-gray-500 mb-3'>
                     <Calendar className='w-4 h-4' />
-                    <span>{post.date}</span>
+                    <span>{post.createdAt.split("T")[0]}</span>
                   </div>
 
                   <h3 className='text-xl font-bold text-gray-800 mb-3 group-hover:text-teal-600 transition-colors'>
@@ -314,6 +223,13 @@ export default function BlogPage() {
                   <p className='text-gray-600 text-sm leading-relaxed line-clamp-3'>
                     {post.description}
                   </p>
+
+                  {/* EDIT ICON */}
+                  <div className='absolute top-3 right-3  transition-opacity duration-300'>
+                    <Link href={`/blog/edit/${post._id}`}>
+                      <Edit className='w-6 h-6 text-gray-600' />
+                    </Link>
+                  </div>
                 </CardContent>
               </Card>
             ))}
