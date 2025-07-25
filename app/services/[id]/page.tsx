@@ -8,12 +8,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { CloudUpload, Edit2, Check, X } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   useGetServiceByIdQuery,
   useUpdateServiceMutation,
 } from "@/redux/feature/servicesAPI";
+import { toast } from "sonner";
 
 interface AdditionalService {
   id: string;
@@ -99,6 +99,7 @@ export default function CreateCategoryPage() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const params = useParams();
+  const router = useRouter();
 
   const { data: service } = useGetServiceByIdQuery(params.id as string);
 
@@ -127,9 +128,6 @@ export default function CreateCategoryPage() {
             : { ...item, selected: false };
         })
       );
-
-      // Optional: Show image (if needed)
-      // setImagePreview(api.image); — if you want to show preview
     }
   }, [service?.data]);
 
@@ -268,11 +266,6 @@ export default function CreateCategoryPage() {
       }, {} as { [key: string]: number });
 
     if (Object.keys(selectedServices).length === 0) {
-      toast({
-        title: "No services selected",
-        description: "Please select at least one service.",
-        variant: "destructive",
-      });
       return;
     }
 
@@ -289,8 +282,6 @@ export default function CreateCategoryPage() {
 
     formDataToSend.append("data", JSON.stringify(categoryData));
 
-    console.log(categoryData);
-
     try {
       const res = await updateService({
         data: formDataToSend,
@@ -299,16 +290,12 @@ export default function CreateCategoryPage() {
 
       console.log(res);
 
-      toast({
-        title: "✅ Service Updated",
-        description: `${formData.serviceName} updated successfully!`,
-      });
+      if (res.success) {
+        toast("✅ Service Updated Successfully");
+        router.push("/services");
+      }
     } catch (error) {
-      toast({
-        title: "❌ Update Failed",
-        description: "Something went wrong while updating the service.",
-        variant: "destructive",
-      });
+      toast("❌ Update Failed! Please Try Again");
     }
   };
 
@@ -370,7 +357,9 @@ export default function CreateCategoryPage() {
                   type='number'
                   value={formData.price}
                   // onChange={(e) => handleInputChange("price", e.target.value)}
-                  onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, price: Number(e.target.value) })
+                  }
                   placeholder='Price: $45'
                   className='w-full px-4 py-3 bg-transparent text-black border border-gray-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent'
                 />

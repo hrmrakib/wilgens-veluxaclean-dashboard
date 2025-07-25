@@ -37,7 +37,7 @@ const authAPI = baseApi.injectEndpoints({
     updateService: builder.mutation<any, { data: any; id: string }>({
       query: ({ data, id }) => ({
         url: `/service/update-service/${id}`,
-        method: "PATCH",
+        method: "PUT",
         body: data,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
