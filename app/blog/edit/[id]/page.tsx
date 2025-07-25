@@ -142,62 +142,6 @@ export default function CreateBlogPage() {
     }
   };
 
-  // const handleSave = async () => {
-  //   if (!formData.title.trim()) {
-  //     toast("Blog name required");
-  //     return;
-  //   }
-
-  //   if (!formData.description.trim()) {
-  //     toast("Service details required");
-  //     return;
-  //   }
-
-  //   const blogData = {
-  //     ...formData,
-  //   };
-
-  //   console.log("Saving blog:", { ...blogData });
-  //   const formDataToSend = new FormData();
-
-  //   formDataToSend.append("data", JSON.stringify(blogData));
-
-  //   if (uploadedFile) {
-  //     formDataToSend.append("image", uploadedFile);
-  //   }
-
-  //   console.log("Saving blog:", blogData);
-
-  //   try {
-  //     const res = await updateService({
-  //       data: formDataToSend,
-  //       id: params.id as string,
-  //     }).unwrap();
-
-  //     console.log(res);
-
-  //     if (res?.success) {
-  //       toast("❎ Blog Created Successfully!");
-  //       refetch();
-  //       router.push("/blog");
-  //     }
-  //     // Reset form
-  //     setFormData({
-  //       title: "",
-  //       description: "",
-  //     });
-  //   } catch (error) {
-  //     toast("✖️ Failed to create blog");
-  //     console.error("Error saving blog:", error);
-  //   } finally {
-  //     // setFormData({
-  //     //   title: "",
-  //     //   description: "",
-  //     // });
-  //     // setUploadedFile(null);
-  //   }
-  // };
-
   return (
     <div className='w-full min-h-screen bg-linear-to-r from-[#315D62] to-[#6ECEDA] p-4 sm:p-6 lg:p-8'>
       <div className='bg-white w-full rounded-lg p-10'>
