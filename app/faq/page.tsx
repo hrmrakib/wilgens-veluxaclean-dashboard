@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -41,7 +40,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { useGetFaqQuery, useUpdateFaqMutation } from "@/redux/feature/faqAPI";
+import {
+  useCreateFaqMutation,
+  useDeleteFaqMutation,
+  useGetFaqQuery,
+  useUpdateFaqMutation,
+} from "@/redux/feature/faqAPI";
 
 export interface IFaq {
   _id: string;
@@ -66,9 +70,10 @@ export default function FAQDashboard() {
     answer: "",
   });
 
-  const { data: faq } = useGetFaqQuery();
+  const { data: faq, refetch } = useGetFaqQuery();
   const [updateFaq] = useUpdateFaqMutation();
-  console.log(faq?.data?.result);
+  const [deleteFaq] = useDeleteFaqMutation();
+  const [createFaq] = useCreateFaqMutation();
 
   const resetForm = () => {
     setFormData({
@@ -78,15 +83,30 @@ export default function FAQDashboard() {
     });
   };
 
-  const handleAddFAQ = () => {
+  const handleAddFAQ = async () => {
     if (!formData.question.trim() || !formData.answer.trim()) {
-      toast("Error");
+      toast.error("Error");
       return;
     }
 
-    resetForm();
-    setIsAddDialogOpen(false);
-    toast("Success");
+    try {
+      const res = await createFaq({
+        question: formData.question,
+        answer: formData.answer,
+      });
+
+      if (res.data?.success) {
+        toast.success(res.data.message);
+        refetch();
+      }
+    } catch (error) {
+      toast.error("Error");
+      console.error("Error submitting form:", error);
+    } finally {
+      resetForm();
+      setIsAddDialogOpen(false);
+      toast("Success");
+    }
   };
 
   const handleEditFAQ = async () => {
@@ -107,7 +127,8 @@ export default function FAQDashboard() {
       console.log(res);
 
       if (res?.success) {
-        toast(res.message);
+        toast.success(res.message);
+        refetch();
       }
     } catch (error) {
       toast("Error");
@@ -120,9 +141,17 @@ export default function FAQDashboard() {
     }
   };
 
-  const handleDeleteFAQ = (id: string) => {
-    setFaqs(faqs.filter((faq) => faq.id !== id));
-    toast("Success");
+  const handleDeleteFAQ = async (id: string) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this service?"
+    );
+    if (!confirmDelete) return;
+
+    const res = await deleteFaq(id);
+    if (res?.data?.success) {
+      toast.success(res?.data?.message);
+      refetch();
+    }
   };
 
   const openEditDialog = (faq: IFaq) => {
@@ -139,8 +168,6 @@ export default function FAQDashboard() {
     setExpandedFAQ(expandedFAQ === id ? null : id);
   };
 
-  console.log(formData);
-
   return (
     <div className='container mx-auto p-6 space-y-6'>
       {/* Header */}
@@ -155,7 +182,7 @@ export default function FAQDashboard() {
         {/* Add FAQ */}
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={resetForm}>
+            <Button onClick={resetForm} className="!bg-teal-800">
               <Plus className='w-4 h-4 mr-2' />
               Add FAQ
             </Button>
@@ -261,30 +288,14 @@ export default function FAQDashboard() {
                     >
                       <Edit className='w-4 h-4' />
                     </Button>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant='outline' size='sm'>
-                          <Trash2 className='w-4 h-4' />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete the FAQ.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDeleteFAQ(faq._id)}
-                          >
-                            Delete
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+
+                    <Button
+                      onClick={() => handleDeleteFAQ(faq._id)}
+                      variant='outline'
+                      size='sm'
+                    >
+                      <Trash2 className='w-4 h-4' />
+                    </Button>
                   </div>
                 </div>
               </div>
