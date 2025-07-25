@@ -261,19 +261,30 @@ export default function ServicesPage() {
           <div className='space-y-12'>
             {/* Page Header */}
             <div
-              className={`transition-all duration-1000 delay-300 mt-6 ${
+              className={`flex items-center justify-between transition-all duration-1000 delay-300 mt-6 ${
                 isVisible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-8"
               }`}
             >
-              <h1 className='text-3xl  font-bold text-gray-100 mb-2'>
-                All Services by Category
-              </h1>
-              <p className='text-gray-100'>
-                Comprehensive cleaning solutions for every need. Browse our
-                complete catalog of professional services.
-              </p>
+              <div>
+                <h1 className='text-3xl  font-bold text-gray-100 mb-2'>
+                  All Services by Category
+                </h1>
+                <p className='text-gray-100'>
+                  Comprehensive cleaning solutions for every need. Browse our
+                  complete catalog of professional services.
+                </p>
+              </div>
+
+              <div className='flex gap-2'>
+                <Link
+                  href='/services/create'
+                  className='text-base px-4 py-2.5 transition-all flex items-center justify-center rounded-lg text-[#000000] duration-300 bg-[#ffffff] hover:bg-[#d1d3d3] border border-[#c3c5c5]'
+                >
+                  Create Service
+                </Link>
+              </div>
             </div>
 
             {/* Carpet Cleaning Service */}

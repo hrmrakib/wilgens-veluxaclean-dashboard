@@ -1,8 +1,8 @@
 "use client";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,8 +37,8 @@ export default function CreateCategoryPage() {
     serviceName: "",
     details: "",
     price: 0,
-    additionalCostEnabled: true,
   });
+  const [additionalCostEnabled, setAdditionalCostEnabled] = useState(true);
 
   const [additionalServices, setAdditionalServices] = useState<
     AdditionalService[]
@@ -302,12 +302,9 @@ export default function CreateCategoryPage() {
     }
 
     formDataToSend.append("data", JSON.stringify(categoryData));
-    console.log(categoryData);
 
     try {
-      const res = await createService({
-        data: formDataToSend,
-      }).unwrap();
+      const res = await createService(formDataToSend).unwrap();
 
       console.log(res);
 
@@ -434,9 +431,9 @@ export default function CreateCategoryPage() {
                 </Label>
                 <div className='flex items-center space-x-3 p-4 border border-gray-200 rounded-lg'>
                   <Switch
-                    checked={formData.additionalCostEnabled}
+                    checked={additionalCostEnabled}
                     onCheckedChange={(checked) =>
-                      handleInputChange("additionalCostEnabled", checked)
+                      setAdditionalCostEnabled(checked)
                     }
                     className='data-[state=checked]:bg-teal-500'
                   />
@@ -446,7 +443,7 @@ export default function CreateCategoryPage() {
                 </div>
               </div>
               {/* Additional Services Grid */}
-              {formData.additionalCostEnabled && (
+              {additionalCostEnabled && (
                 <div className='space-y-4'>
                   <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
                     {additionalServices.map((service) => (
