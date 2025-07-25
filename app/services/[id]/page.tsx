@@ -233,11 +233,7 @@ export default function CreateCategoryPage() {
       if (file.type.startsWith("image/")) {
         setUploadedFile(file);
       } else {
-        toast({
-          title: "Invalid file type",
-          description: "Please upload a JPEG, PNG, or JPG image.",
-          variant: "destructive",
-        });
+        toast("😒 Invalid file type");
       }
     }
   };
@@ -248,11 +244,7 @@ export default function CreateCategoryPage() {
       if (file.type.startsWith("image/")) {
         setUploadedFile(file);
       } else {
-        toast({
-          title: "Invalid file type",
-          description: "Please upload a JPEG, PNG, or JPG image.",
-          variant: "destructive",
-        });
+        toast("😒 Invalid file type");
       }
     }
   };

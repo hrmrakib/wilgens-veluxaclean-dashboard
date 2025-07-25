@@ -8,8 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { CloudUpload, Edit2, Check, X, Sparkles } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
-import { useParams } from "next/navigation";
+import { toast } from "sonner";
+import { useParams, useRouter } from "next/navigation";
 import { useCreateServiceMutation } from "@/redux/feature/servicesAPI";
 import {
   Select,
@@ -127,6 +127,7 @@ export default function CreateCategoryPage() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const params = useParams();
+  const router = useRouter();
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [currentSelection, setCurrentSelection] = useState<string>("");
 
@@ -248,11 +249,7 @@ export default function CreateCategoryPage() {
       if (file.type.startsWith("image/")) {
         setUploadedFile(file);
       } else {
-        toast({
-          title: "Invalid file type",
-          description: "Please upload a JPEG, PNG, or JPG image.",
-          variant: "destructive",
-        });
+        toast("Invalid file type");
       }
     }
   };
@@ -263,11 +260,7 @@ export default function CreateCategoryPage() {
       if (file.type.startsWith("image/")) {
         setUploadedFile(file);
       } else {
-        toast({
-          title: "Invalid file type",
-          description: "Please upload a JPEG, PNG, or JPG image.",
-          variant: "destructive",
-        });
+        toast("Invalid file type");
       }
     }
   };
@@ -281,11 +274,7 @@ export default function CreateCategoryPage() {
       }, {} as { [key: string]: number });
 
     if (Object.keys(selectedServices).length === 0) {
-      toast({
-        title: "No services selected",
-        description: "Please select at least one service.",
-        variant: "destructive",
-      });
+      toast("No services selected");
       return;
     }
 
@@ -306,18 +295,12 @@ export default function CreateCategoryPage() {
     try {
       const res = await createService(formDataToSend).unwrap();
 
-      console.log(res);
-
-      toast({
-        title: "✅ Service Updated",
-        description: `${formData.serviceName} updated successfully!`,
-      });
+      if (res.success) {
+        toast("✅ Service Created Successfully");
+        router.push("/services");
+      }
     } catch (error) {
-      toast({
-        title: "❌ Update Failed",
-        description: "Something went wrong while updating the service.",
-        variant: "destructive",
-      });
+      toast("❌ Create Failed! Please try again.");
     }
   };
 
@@ -590,7 +573,7 @@ export default function CreateCategoryPage() {
                   onClick={handleSave}
                   className='w-full bg-[#6ECEDA] hover:bg-[#5adef0] text-white py-3 px-6 rounded-lg font-medium text-lg transition-colors'
                 >
-                  Update
+                  Create
                 </button>
               </div>
             </div>
