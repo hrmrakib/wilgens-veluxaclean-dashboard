@@ -11,12 +11,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
-import UserDetailsModal from "@/components/user-details-modal";
-import {
-  useGetAllUsersQuery,
-  useGetUserByIdQuery,
-} from "@/redux/feature/userAPI";
+import { useGetAllUsersQuery } from "@/redux/feature/userAPI";
 import DetailRow from "@/components/DetailRow";
+import { StatCard } from "../page";
 
 interface IUser {
   _id: string;
@@ -44,7 +41,10 @@ function TransactionTable() {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Configurable items per page
-  const { data: users, isLoading } = useGetAllUsersQuery({});
+  const { data: users, isLoading } = useGetAllUsersQuery({
+    page: currentPage,
+    limit: itemsPerPage,
+  });
 
   console.log(users?.data?.data);
 
@@ -217,7 +217,8 @@ function TransactionTable() {
 
   return (
     <>
-      <div className='overflow-hidden bg-tableBg rounded-md pb-6'>
+      <StatCard title='Total Users' value={users?.data?.meta?.total} icon='/user.png' />
+      <div className='overflow-hidden bg-tableBg rounded-md pb-6 mt-5'>
         <h2 className='text-[32px] font-medium text-primary py-6 px-3'>
           User List
         </h2>
@@ -274,7 +275,7 @@ function TransactionTable() {
           </Table>
         </div>
 
-        <div className='max-w-sm mx-auto flex items-center justify-between rounded-lg bg-paginationBg px-4 py-3 mp-6'>
+        <div className='max-w-sm mx-auto flex items-center justify-between rounded-lg bg-paginationBg px-4 py-3 mt-6'>
           <div className='flex items-center gap-2'>
             <Button
               variant='outline'

@@ -1,6 +1,6 @@
 "use client";
 
-import { Info } from "lucide-react";
+import { Info, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -12,25 +12,53 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
-import UserDetailsModal from "@/components/user-details-modal";
 import Image from "next/image";
-import ReactApexChart from "react-apexcharts";
 import Chart from "@/components/chart/Chart";
+import { useGetPaymentQuery } from "@/redux/feature/paymentAPI";
+import DetailRow from "@/components/DetailRow";
+
+interface PaymentInfo {
+  _id: string;
+  amount: number;
+  user: {
+    name: string;
+    email: string;
+    image: string;
+  };
+  service: {
+    _id: string;
+    serviceName: string;
+    category: string;
+    details: string;
+    price: number;
+    additionalServices: {
+      [key: string]: number;
+    };
+    image: string;
+    isDeleted: boolean;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
+  transactionId: string;
+  email: string;
+  status: "complete" | "pending" | "failed";
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
 
 export default function DashboardContent() {
   return (
     <main className='bg-linear-to-r from-[#315D62] to-[#6ECEDA] w-full p-4 md:p-6'>
       <section className='mb-8'>
-        {/* <h2 className='mb-4 text-[32px] font-medium text-primary'>Overview</h2> */}
         <div className='ontainer mx-auto'>
           <div className='flex items-center gap-14 flex-wrap'>
-            <StatCard title='Total User' value='520' icon='/user.png' />
             <StatCard
               title='Total Earnings'
               value='$12300'
               icon='/earning.png'
             />
-            {/* <StatCard title='Total Subscriptions' value='1430' /> */}
           </div>
         </div>
       </section>
@@ -38,9 +66,6 @@ export default function DashboardContent() {
         <Chart />
       </section>
       <section>
-        {/* <h2 className='mb-4 text-[28px] font-medium text-primary'>
-          Transaction
-        </h2> */}
         <TransactionTable />
       </section>
     </main>
@@ -53,7 +78,7 @@ interface StatCardProps {
   icon: string;
 }
 
-function StatCard({ title, value, icon }: StatCardProps) {
+export function StatCard({ title, value, icon }: StatCardProps) {
   return (
     <Card className='overflow-hidden bg-starCardBg w-full md:max-w-[380px] h-[161px] flex items-center'>
       <CardContent className='flex items-center gap-10 p-6 ml-5'>
@@ -77,14 +102,11 @@ function StatCard({ title, value, icon }: StatCardProps) {
   );
 }
 
-// const domContainer = document.querySelector('#app');
-// ReactDOM.render(<ApexChart />, domContainer);
-
 function TransactionTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Configurable items per page
+  const [itemsPerPage] = useState(10);
 
   const transactions = [
     {
@@ -174,7 +196,6 @@ function TransactionTable() {
   ];
 
   // Calculate pagination
-  const totalPages = Math.ceil(transactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentTransactions = transactions.slice(startIndex, endIndex);
@@ -182,6 +203,12 @@ function TransactionTable() {
   const [chartData, setChartData] = useState<
     { month: string; amount: number }[]
   >([]);
+
+  const { data: transaction } = useGetPaymentQuery({
+    page: currentPage,
+    limit: itemsPerPage,
+  });
+  const totalPages = Math.ceil(transaction?.length / itemsPerPage);
 
   const openUserModal = (user: any) => {
     setSelectedUser(user);
@@ -211,10 +238,10 @@ function TransactionTable() {
                   User Name
                 </TableHead>
                 <TableHead className='text-tableHeaderColor text-lg text-center'>
-                  Subscription
+                  Email
                 </TableHead>
                 <TableHead className='text-tableHeaderColor text-lg text-center'>
-                  Join Date
+                  Amount
                 </TableHead>
                 <TableHead className='text-tableHeaderColor text-lg text-center'>
                   Action
@@ -223,19 +250,19 @@ function TransactionTable() {
             </TableHeader>
 
             <TableBody>
-              {currentTransactions.map((transaction) => (
-                <TableRow key={transaction.id}>
+              {transaction?.data?.result?.map((transaction: PaymentInfo) => (
+                <TableRow key={transaction._id}>
                   <TableCell className='font-medium text-lg text-tableRowColor text-center'>
-                    {transaction.id}
+                    {transaction?.transactionId}
                   </TableCell>
                   <TableCell className='text-lg text-tableRowColor text-center'>
-                    {transaction.name}
+                    {transaction?.user?.name}
                   </TableCell>
                   <TableCell className='text-lg text-tableRowColor text-center'>
-                    {transaction.subscription}
+                    {transaction?.user?.email}
                   </TableCell>
                   <TableCell className='text-lg text-tableRowColor text-center'>
-                    {transaction.date}
+                    {transaction?.service?.price}
                   </TableCell>
                   <TableCell className='text-lg text-tableRowColor text-center'>
                     <Button
@@ -327,11 +354,47 @@ function TransactionTable() {
       </div>
 
       {isModalOpen && selectedUser && (
-        <UserDetailsModal
-          user={selectedUser}
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'>
+          <div className='relative w-full max-w-md rounded-md bg-[#000000] px-6 py-6 shadow-lg'>
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className='absolute right-4 top-4 text-gray-500 hover:text-gray-700'
+            >
+              <X className='h-5 w-5' />
+              <span className='sr-only'>Close</span>
+            </button>
+
+            <h2 className='mb-6 py-5 text-center text-[30px] font-semibold text-[#E6E6E6]'>
+              User Details
+            </h2>
+
+            <div className='space-y-6'>
+              <DetailRow label='Transaction ID:' value={selectedUser?._id} />
+              <DetailRow label='User Name' value={selectedUser?.user?.name} />
+              <DetailRow label='Email' value={selectedUser?.email} />
+              <DetailRow
+                label='Service Name'
+                value={selectedUser?.service?.serviceName}
+              />
+              <DetailRow
+                label='Category'
+                value={selectedUser?.service?.category}
+              />
+              <DetailRow label='Price' value={selectedUser?.service?.price} />
+              <DetailRow
+                label='Payment Date'
+                value={selectedUser?.createdAt.split("T")[0]}
+              />
+            </div>
+
+            <Button
+              onClick={() => setIsModalOpen(false)}
+              className='mt-6 w-full bg-[#45b1b4] hover:bg-[#5ce1e6b7]'
+            >
+              Okay
+            </Button>
+          </div>
+        </div>
       )}
     </>
   );

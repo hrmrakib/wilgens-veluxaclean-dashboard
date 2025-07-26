@@ -97,6 +97,15 @@ export default function DashboardSidebar() {
               />
 
               <NavItem
+                href='/contacts'
+                icon={Settings}
+                label='Contacts'
+                active={
+                  pathname === "/contacts" || pathname.startsWith("/contacts/")
+                }
+              />
+
+              <NavItem
                 href='/blog'
                 icon={Users}
                 label='Blog'
