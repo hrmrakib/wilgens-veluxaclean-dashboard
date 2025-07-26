@@ -217,7 +217,11 @@ function TransactionTable() {
 
   return (
     <>
-      <StatCard title='Total Users' value={users?.data?.meta?.total} icon='/user.png' />
+      <StatCard
+        title='Total Users'
+        value={users?.data?.meta?.total}
+        icon='/user.png'
+      />
       <div className='overflow-hidden bg-tableBg rounded-md pb-6 mt-5'>
         <h2 className='text-[32px] font-medium text-primary py-6 px-3'>
           User List
@@ -367,6 +371,14 @@ function TransactionTable() {
               <DetailRow label='User ID:' value={selectedUser?._id} />
               <DetailRow label='Email' value={selectedUser?.email} />
               <DetailRow label='User Name' value={selectedUser?.name} />
+              <DetailRow
+                label='Account Created Date'
+                value={selectedUser?.createdAt.split("T")[0]}
+              />
+              <DetailRow
+                label='Account Created Time'
+                value={selectedUser?.createdAt.split("T")[1]}
+              />
             </div>
 
             <Button

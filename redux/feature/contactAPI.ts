@@ -34,6 +34,16 @@ const contactAPI = baseApi.injectEndpoints({
         },
       }),
     }),
+
+    deleteContact: builder.mutation<any, string>({
+      query: (id) => ({
+        url: `/contact/delete/${id}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -41,5 +51,6 @@ export const {
   useGetAllContactsQuery,
   useCreateContactMutation,
   useUpdateContactStatusMutation,
+  useDeleteContactMutation,
 } = contactAPI;
 export default contactAPI;

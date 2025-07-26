@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Users } from "lucide-react";
+import { Users, X } from "lucide-react";
 import {
+  useDeleteContactMutation,
   useGetAllContactsQuery,
   useUpdateContactStatusMutation,
 } from "@/redux/feature/contactAPI";
@@ -58,8 +59,10 @@ export interface ContactsResponse {
 }
 
 export default function ContactsPage() {
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [message, setMessage] = useState("");
   const itemsPerPage = 6;
 
   const { data: contacts, refetch } = useGetAllContactsQuery({
@@ -69,6 +72,7 @@ export default function ContactsPage() {
   });
 
   const [updateContactStatus] = useUpdateContactStatusMutation();
+  const [deleteContact] = useDeleteContactMutation();
 
   const totalPages = Math.ceil(contacts?.data?.result.length / itemsPerPage);
 
@@ -115,11 +119,58 @@ export default function ContactsPage() {
     }
   };
 
-  console.log({ totalPages });
+  const handleShowMessage = (message: string) => {
+    setMessage(message);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await deleteContact(id).unwrap();
+      console.log(res);
+      if (res?.success) {
+        toast.success("Contact deleted successfully.");
+        await refetch();
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete contact.");
+    }
+  };
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
       <div className='container mx-auto px-4 py-8 max-w-7xl'>
+        {/* message preview on a modal */}
+        {isModalOpen && (
+          <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'>
+            <div className='relative w-full max-w-[600px] max-h-[600px] overflow-y-auto rounded-md bg-[#000000] px-8 py-6 shadow-lg'>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className='absolute right-4 top-4 text-gray-500 hover:text-gray-700'
+              >
+                <X className='h-7 w-7 text-white' />
+                <span className='sr-only'>Close</span>
+              </button>
+
+              <h2 className='mb-6 py-5 text-center text-[30px] underline font-semibold text-[#E6E6E6]'>
+                Message
+              </h2>
+
+              <div className='space-y-6'>
+                <p className='text-[#E6E6E6] leading-relaxed'>{message}</p>
+              </div>
+
+              <Button
+                onClick={() => setIsModalOpen(false)}
+                className='mt-6 w-full bg-[#45b1b4] hover:bg-[#5ce1e6b7]'
+              >
+                Okay
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className='flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8'>
           <div className='mb-6 lg:mb-0'>
@@ -162,7 +213,7 @@ export default function ContactsPage() {
                   <div className='flex items-start justify-between'>
                     <div className='flex items-center space-x-4'>
                       <div className='relative'>
-                        <div className='w-12 h-12 bg-gradient-to-br from-violet-500 via-purple-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg'>
+                        <div className='w-12 h-12 bg-gradient-to-br from-[#8b5cf6] via-[#a78bfa] to-[#c4b5fd] rounded-xl flex items-center justify-center shadow-lg'>
                           <span className='text-white font-semibold text-sm'>
                             {/* {getInitials(contact.name)} */}
                           </span>
@@ -244,11 +295,12 @@ export default function ContactsPage() {
                     </div>
 
                     <div className='flex items-start space-x-3 text-gray-600'>
-                      <div className='w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center mt-0.5'>
+                      <div className='w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center '>
                         <MessageSquare className='w-4 h-4' />
                       </div>
-                      <p className='text-sm text-gray-700 line-clamp-3 leading-relaxed'>
-                        {contact.message}
+                      <p className='text-base text-gray-700 line-clamp-3 leading-relaxed'>
+                        {contact.message.slice(0, 39)}
+                        {contact.message.length > 20 && "..."}
                       </p>
                     </div>
                   </div>
@@ -259,23 +311,27 @@ export default function ContactsPage() {
                         <Calendar className='w-3 h-3' />
                       </div>
                       <span className='px-2 py-1 bg-gray-50 rounded-full'>
-                        #{contact._id.slice(-6)}
+                        {contact.createdAt.split("T")[0]}
+                      </span>
+                      <span className='px-2 py-1 bg-gray-50 rounded-full'>
+                        {contact.createdAt.split("T")[1].split(".")[0]}
                       </span>
                     </div>
 
                     <div className='flex space-x-2'>
                       <Button
                         size='sm'
-                        className='flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0 shadow-md hover:shadow-lg transition-all'
+                        onClick={() => handleDelete(contact?._id)}
+                        className='flex bg-gradient-to-r from-[#ec654d] to-[#d32304] hover:from-[#ec654d] hover:to-[#d32304c7] text-white border-0 shadow-md hover:shadow-lg transition-all'
                       >
-                        View Details
+                        Delete
                       </Button>
                       <Button
                         size='sm'
-                        variant='outline'
-                        className='flex-1 hover:bg-gray-50 transition-colors bg-transparent'
+                        onClick={() => handleShowMessage(contact?.message)}
+                        className='flex-1 bg-gradient-to-r from-[#8b5cf6] to-[#c4b5fd] hover:from-blue-600 hover:to-purple-700 text-white border-0 shadow-md hover:shadow-lg transition-all'
                       >
-                        Update
+                        View Message
                       </Button>
                     </div>
                   </div>
