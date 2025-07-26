@@ -1,37 +1,15 @@
 "use client";
 
-import { useState, useMemo } from "react";
-// import ContactDetailModal from "@/components/contact-detail-modal";
-// import StatsCard from "@/components/stats-card";
-import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Search,
-  Users,
-  Clock,
-  CheckCircle,
-  Download,
-  Plus,
-  SlidersHorizontal,
-  ArrowUpDown,
-} from "lucide-react";
-import ContactCard from "@/components/contact-card";
+import { Users } from "lucide-react";
 import {
   useGetAllContactsQuery,
   useUpdateContactStatusMutation,
 } from "@/redux/feature/contactAPI";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Mail,
-  Phone,
   Calendar,
   MessageSquare,
   Tag,
@@ -83,10 +61,6 @@ export default function ContactsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [sortBy, setSortBy] = useState<"name" | "date" | "status">("date");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
@@ -101,24 +75,7 @@ export default function ContactsPage() {
   console.log("data", contacts?.data?.result);
   console.log("statusFilter", statusFilter);
 
-  // Filter and sort contacts
-
-  // Pagination
   const totalPages = Math.ceil(contacts?.data?.result.length / itemsPerPage);
-  const paginatedContacts = contacts?.data?.result.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  // Stats calculations
-  //   const getStatusCounts = () => {
-  //     return contacts.reduce((acc, contact) => {
-  //       acc[contact.status] = (acc[contact.status] || 0) + 1;
-  //       return acc;
-  //     }, {} as Record<string, number>);
-  //   };
-
-  //   const statusCounts = getStatusCounts();
 
   const getStatusColor = (
     status:
@@ -147,13 +104,6 @@ export default function ContactsPage() {
     if (category.includes("Construction")) return "🔨";
     if (category.includes("Emergency")) return "🚨";
     return "🧹";
-  };
-
-  const clearFilters = () => {
-    setSearchTerm("");
-    setStatusFilter("all");
-    setCategoryFilter("all");
-    setCurrentPage(1);
   };
 
   const handleQuickStatusUpdate = async (status: string, id: string) => {
@@ -347,9 +297,6 @@ export default function ContactsPage() {
             <p className='text-gray-500 mb-4'>
               No contacts match your current filters.
             </p>
-            <Button variant='outline' onClick={clearFilters}>
-              Clear Filters
-            </Button>
           </div>
         )}
 
