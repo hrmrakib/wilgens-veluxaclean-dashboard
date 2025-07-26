@@ -58,9 +58,7 @@ export interface ContactsResponse {
 }
 
 export default function ContactsPage() {
-  const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
@@ -71,9 +69,6 @@ export default function ContactsPage() {
   });
 
   const [updateContactStatus] = useUpdateContactStatusMutation();
-
-  console.log("data", contacts?.data?.result);
-  console.log("statusFilter", statusFilter);
 
   const totalPages = Math.ceil(contacts?.data?.result.length / itemsPerPage);
 
