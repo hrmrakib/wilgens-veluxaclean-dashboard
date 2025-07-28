@@ -9,7 +9,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   useGetTermsAndConditionsQuery,
+  useGetTrustAndSafetyQuery,
   useSetTermsAndConditionsMutation,
+  useSetTrustAndSafetyMutation,
 } from "@/redux/feature/settingAPI";
 
 const EditAboutUs = () => {
@@ -18,10 +20,10 @@ const EditAboutUs = () => {
   const [content, setContent] = useState<string>("");
   const router = useRouter();
 
-  const { data, isLoading } = useGetTermsAndConditionsQuery({});
+  const { data, isLoading } = useGetTrustAndSafetyQuery({});
 
   const [setTermsAndConditions, { isLoading: isSaving }] =
-    useSetTermsAndConditionsMutation();
+    useSetTrustAndSafetyMutation();
 
   useEffect(() => {
     let initialized = false;
@@ -70,7 +72,7 @@ const EditAboutUs = () => {
 
       if (res?.success) {
         toast.success("Terms and Conditions saved successfully!");
-        router.push("/setting/terms-condition");
+        router.push("/setting/trust-and-safety");
       } else {
         toast.error("Failed to save.");
       }

@@ -2,22 +2,21 @@
 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import DOMPurify from "dompurify";
 import { useGetPrivacyPolicyQuery } from "@/redux/feature/settingAPI";
 
-export default function PrivacyPolicyPage() {
-  const { data: privacyPolicy, isLoading } = useGetPrivacyPolicyQuery({});
-
-  if (isLoading) return <div>Loading...</div>;
-
+export default function TermsConditionPage() {
+  const { data, isLoading } = useGetPrivacyPolicyQuery({});
+  console.log(data?.data[0]?.description);
   return (
-    <div className='flex w-full min-h-screen bg-linear-to-r from-[#315D62] to-[#6ECEDA] p-4 sm:p-6 lg:p-8 text-primary'>
+    <div className='flex min-h-screen bg-linear-to-r from-[#315D62] to-[#6ECEDA]'>
       <div className='flex-1 w-full'>
         <main className='w-full p-4 md:p-6'>
           <div className='max-w-3xl mx-auto'>
             <div className='mb-6 flex items-center justify-between'>
               <Link
                 href='/setting'
-                className='inline-flex items-center text-primary hover:text-teal-700'
+                className='inline-flex items-center text-[#ffffff] hover:text-[#ffffffaf]'
               >
                 <ArrowLeft className='mr-2 h-4 w-4' />
                 <span className='text-xl font-semibold'>Privacy Policy</span>
@@ -25,42 +24,24 @@ export default function PrivacyPolicyPage() {
 
               <Link
                 href='/setting/privacy-policy/edit'
-                className='inline-flex items-center text-primary hover:text-teal-700 border border-primary rounded-md px-4 py-1.5'
+                className='inline-flex items-center text-[#ffffff] hover:text-[#f3f3f3] border border-[#d8d9db] rounded-md px-4 py-1.5'
               >
                 <span className='text-xl font-semibold'>Edit</span>
               </Link>
             </div>
 
             <div className='prose prose-sm max-w-none'>
-              <h2 className='text-xl font-semibold mb-4'>
-                Terms and Conditions
-              </h2>
-            </div>
-
-            <div>
-              {privacyPolicy?.data[0]?.content ? (
+              {isLoading ? (
+                <p className='text-base mb-4'>Loading...</p>
+              ) : (
                 <div
-                  className='prose prose-sm max-w-none'
+                  className='text-lg mb-4 prose'
                   dangerouslySetInnerHTML={{
-                    __html: privacyPolicy?.data[0]?.content || "",
+                    __html: DOMPurify.sanitize(
+                      data?.data[0]?.description || ""
+                    ),
                   }}
                 />
-              ) : (
-                // <p>Loading content...</p>
-                <p>
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Nulla autem nobis fugiat, dicta nostrum praesentium illum
-                  nemo. Voluptatem voluptate reiciendis eius sed incidunt quae?
-                  Placeat quisquam nihil unde corrupti minima quibusdam, facere
-                  consequuntur dolore animi excepturi iusto nobis reiciendis
-                  iste dolor ducimus sequi minus dolores sapiente odio pariatur.
-                  Ratione unde consequuntur eum! Delectus ipsum voluptate illum
-                  minima, eum et neque hic laboriosam dolorum esse, perferendis,
-                  consequatur quidem ipsa exercitationem totam rerum amet
-                  expedita beatae alias quo eveniet vel? Eveniet ducimus facere
-                  repellat fuga dolorum praesentium hic tempora quidem dolor
-                  enim.
-                </p>
               )}
             </div>
           </div>

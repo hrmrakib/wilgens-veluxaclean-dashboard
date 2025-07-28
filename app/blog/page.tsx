@@ -202,10 +202,10 @@ export default function BlogPage() {
               >
                 <div className='aspect-[4/3] relative overflow-hidden'>
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${post.image}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${post?.image}`}
                     alt={post.title}
                     width={500}
-                    height={500}
+                    height={500} 
                     className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
                   />
                 </div>
@@ -239,12 +239,12 @@ export default function BlogPage() {
             ))}
           </div>
 
-          {blogPosts.length === 0 && (
+          {blogs?.data?.result?.length === 0 && (
             <div className='text-center py-12'>
               <div className='text-gray-400 mb-4'>
                 <Calendar className='w-16 h-16 mx-auto' />
               </div>
-              <h3 className='text-xl font-semibold text-gray-600 mb-2'>
+              <h3 className='text-xl font-semibold text-gray-800 mb-2'>
                 No blog posts yet
               </h3>
               <p className='text-gray-500'>

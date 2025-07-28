@@ -107,6 +107,7 @@ export default function CreateBlogPage() {
     const formDataToSend = new FormData();
 
     formDataToSend.append("data", JSON.stringify(blogData));
+
     if (uploadedFile) {
       formDataToSend.append("image", uploadedFile);
     }
@@ -117,20 +118,22 @@ export default function CreateBlogPage() {
         id: params.id as string,
       }).unwrap();
 
-      console.log(res);
-
       if (res?.success) {
         toast("✅ Blog updated successfully!");
         refetch();
         router.push("/blog");
+      } else {
+        toast("✖️ Blog update failed. Please check the uploaded image.");
+        console.error("Upload failed response:", res);
       }
-    } catch (error) {
-      toast("✖️ Failed to update blog");
+    } catch (error: any) {
+      const errMsg =
+        error?.data?.message || error?.message || "Failed to update blog.";
+      toast(`✖️ ${errMsg}`);
       console.error("Error saving blog:", error);
     }
   };
 
-  console.log({ ...formData  }, "formdata");
   return (
     <div className='w-full min-h-screen bg-linear-to-r from-[#315D62] to-[#6ECEDA] p-4 sm:p-6 lg:p-8'>
       <div className='bg-white w-full rounded-lg p-10'>

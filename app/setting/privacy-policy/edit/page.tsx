@@ -4,24 +4,21 @@ import { useEffect, useRef, useState } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import { Button } from "@/components/ui/button";
+
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   useGetPrivacyPolicyQuery,
   useSetPrivacyPolicyMutation,
 } from "@/redux/feature/settingAPI";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
-const EditPrivacyPolicy = () => {
+const EditAboutUs = () => {
   const editorRef = useRef<HTMLDivElement>(null);
   const quillRef = useRef<Quill | null>(null);
   const [content, setContent] = useState<string>("");
   const router = useRouter();
 
-  const {
-    data: privacyPolicy,
-    isLoading,
-    refetch,
-  } = useGetPrivacyPolicyQuery({});
+  const { data, isLoading } = useGetPrivacyPolicyQuery({});
 
   const [setPrivacyPolicy, { isLoading: isSaving }] =
     useSetPrivacyPolicyMutation();
@@ -43,9 +40,9 @@ const EditPrivacyPolicy = () => {
 
         quillRef.current = quill;
 
-        if (privacyPolicy?.data[0]?.content) {
-          quill.root.innerHTML = privacyPolicy?.data[0]?.content || "";
-          setContent(privacyPolicy?.data[0]?.content || "");
+        if (data?.data[0]?.description) {
+          quill.root.innerHTML = data?.data[0]?.description;
+          setContent(data?.data[0]?.description);
         }
 
         quill.on("text-change", () => {
@@ -61,22 +58,17 @@ const EditPrivacyPolicy = () => {
     return () => {
       initialized = true;
     };
-  }, [privacyPolicy]);
+  }, [data]);
 
-  if (isLoading && !privacyPolicy && !quillRef.current) {
-    return (
-      <div className='flex justify-center items-center min-h-screen'>
-        <div className='animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-200'></div>
-      </div>
-    );
-  }
+  if (isLoading && !data && !quillRef.current) return <span>Loading...</span>;
 
   const handleSubmit = async () => {
     try {
-      const res = await setPrivacyPolicy({ content:  content }).unwrap();
+      const res = await setPrivacyPolicy({
+        description: content,
+      }).unwrap();
 
-      if (res?.status === "success") {
-        refetch();
+      if (res?.success) {
         toast.success("Terms and Conditions saved successfully!");
         router.push("/setting/privacy-policy");
       } else {
@@ -88,7 +80,7 @@ const EditPrivacyPolicy = () => {
   };
 
   return (
-    <div className='min-h-[75vh] w-[96%] mx-auto flex flex-col justify-between gap-6'>
+    <div className='min-h-[75vh] w-[96%] mx-auto flex flex-col justify- gap-6'>
       <div className='space-y-6'>
         <div className='h-auto'>
           <div
@@ -103,7 +95,7 @@ const EditPrivacyPolicy = () => {
         <Button
           onClick={handleSubmit}
           disabled={isSaving}
-          className='bg-primary hover:bg-teal-700'
+          className='bg-[#0249E1] hover:bg-teal-700'
         >
           {isSaving ? "Saving..." : "Save Content"}
         </Button>
@@ -112,4 +104,4 @@ const EditPrivacyPolicy = () => {
   );
 };
 
-export default EditPrivacyPolicy;
+export default EditAboutUs;

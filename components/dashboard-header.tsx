@@ -1,15 +1,10 @@
 "use client";
 
-import { Bell } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useGetProfileQuery } from "@/redux/feature/settingAPI";
 
 export default function DashboardHeader() {
   const pathname = usePathname();
-  const { data: userProfile, isLoading } = useGetProfileQuery({});
 
   if (
     pathname === "/signin" ||
@@ -28,30 +23,25 @@ export default function DashboardHeader() {
         <div className='flex items-center gap-4'>
           <SidebarTrigger className='text-white md:hidden' />
           <div>
-            <h1 className='text-2xl font-medium'>
-              Welcome, {userProfile?.full_name}
-            </h1>
+            <h1 className='text-2xl font-medium'>Welcome,</h1>
             <p className='text-sm opacity-80'>Have a nice day</p>
           </div>
         </div>
 
         <div className='flex items-center gap-4'>
           <div className='flex items-center gap-2'>
-            <Link href='/setting/personal-information'>
+            {/* <Link href='/setting/personal-information'>
               <Avatar>
                 <AvatarImage
                   src={`/admin.png`}
-                  // src={`${process.env.NEXT_PUBLIC_API_URL}${userProfile?.profile_pic}`}
                   alt={userProfile?.full_name}
                 />
                 <AvatarFallback>
                   {userProfile?.full_name.charAt(0)}
                 </AvatarFallback>
               </Avatar>
-            </Link>
-            <span className='hidden md:inline'>
-              {userProfile?.full_name || "Admin"}{" "}
-            </span>
+            </Link> */}
+            <span className='hidden md:inline'>Admin</span>
           </div>
         </div>
       </header>

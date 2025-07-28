@@ -228,7 +228,7 @@ export default function FAQDashboard() {
               >
                 Cancel
               </Button>
-              <Button onClick={handleAddFAQ} className='bg-button text-black'>
+              <Button onClick={handleAddFAQ} className='bg-button hover:bg-button text-black'>
                 Add FAQ
               </Button>
             </div>

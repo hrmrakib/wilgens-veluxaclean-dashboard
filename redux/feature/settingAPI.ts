@@ -39,18 +39,15 @@ const settingAPI = baseApi.injectEndpoints({
 
     getTermsAndConditions: builder.query({
       query: () => ({
-        url: `/dicipline/terms-conditions/`,
+        url: `/setting/get/terms-and-conditions`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
       }),
     }),
 
     setTermsAndConditions: builder.mutation({
       query: (data) => ({
-        url: `/dicipline/terms-conditions/`,
-        method: "PUT",
+        url: `/setting/update/terms-and-conditions`,
+        method: "PATCH",
         body: data,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -60,7 +57,7 @@ const settingAPI = baseApi.injectEndpoints({
 
     getPrivacyPolicy: builder.query({
       query: () => ({
-        url: `/api-apps/privacy_policies/`,
+        url: `/setting/get/privacy-policy`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -70,8 +67,8 @@ const settingAPI = baseApi.injectEndpoints({
 
     setPrivacyPolicy: builder.mutation({
       query: (data) => ({
-        url: `/api-apps/privacy_policies/`,
-        method: "PUT",
+        url: `/setting/update/privacy-policy`,
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -81,18 +78,15 @@ const settingAPI = baseApi.injectEndpoints({
 
     getTrustAndSafety: builder.query({
       query: () => ({
-        url: `/dicipline/trust-safety/`,
+        url: `/setting/get/trust-and-safety`,
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
       }),
     }),
 
     setTrustAndSafety: builder.mutation({
       query: (data) => ({
-        url: `/dicipline/trust-safety/`,
-        method: "PUT",
+        url: `/setting/update/trust-and-safety`,
+        method: "PATCH",
         body: data,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
