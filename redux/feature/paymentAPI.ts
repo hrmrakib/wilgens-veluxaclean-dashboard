@@ -25,5 +25,5 @@ const paymentAPI = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetPaymentQuery } = paymentAPI;
+export const { useGetPaymentQuery, useGetStaticsQuery } = paymentAPI;
 export default paymentAPI;

@@ -14,7 +14,10 @@ import {
 import { useState } from "react";
 import Image from "next/image";
 import Chart from "@/components/chart/Chart";
-import { useGetPaymentQuery } from "@/redux/feature/paymentAPI";
+import {
+  useGetPaymentQuery,
+  useGetStaticsQuery,
+} from "@/redux/feature/paymentAPI";
 import DetailRow from "@/components/DetailRow";
 
 interface PaymentInfo {
@@ -49,6 +52,8 @@ interface PaymentInfo {
 }
 
 export default function DashboardContent() {
+  const { data } = useGetStaticsQuery();
+
   return (
     <main className='bg-linear-to-r from-[#315D62] to-[#6ECEDA] w-full p-4 md:p-6'>
       <section className='mb-8'>
@@ -56,7 +61,7 @@ export default function DashboardContent() {
           <div className='flex items-center gap-14 flex-wrap'>
             <StatCard
               title='Total Earnings'
-              value='$12300'
+              value={data?.data?.totalAmount || 0}
               icon='/earning.png'
             />
           </div>
