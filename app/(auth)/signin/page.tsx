@@ -75,7 +75,7 @@ export default function SignInPage() {
       console.log(res);
 
       if (res?.data?.success) {
-        toast.success(res?.data?.message);
+        toast.success("Login successful!");
         localStorage.setItem("accessToken", res?.data?.data?.accessToken);
         localStorage.setItem("refreshToken", res?.data?.data?.refreshToken);
         await saveTokens(res?.data?.data?.accessToken);
