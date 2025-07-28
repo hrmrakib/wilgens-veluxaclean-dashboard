@@ -7,7 +7,7 @@ import { useGetTermsAndConditionsQuery } from "@/redux/feature/settingAPI";
 
 export default function TermsConditionPage() {
   const { data, isLoading } = useGetTermsAndConditionsQuery({});
-  console.log(data?.data[0]?.description);
+
   return (
     <div className='flex min-h-screen bg-linear-to-r from-[#315D62] to-[#6ECEDA]'>
       <div className='flex-1 w-full'>
@@ -16,7 +16,7 @@ export default function TermsConditionPage() {
             <div className='mb-6 flex items-center justify-between'>
               <Link
                 href='/setting'
-                className='inline-flex items-center text-[#324de7] hover:text-teal-700'
+                className='inline-flex items-center text-[#ffffff] hover:text-[#ffffffaf]'
               >
                 <ArrowLeft className='mr-2 h-4 w-4' />
                 <span className='text-xl font-semibold'>Terms & Condition</span>
@@ -24,7 +24,7 @@ export default function TermsConditionPage() {
 
               <Link
                 href='/setting/terms-condition/edit'
-                className='inline-flex items-center text-[#324de7] hover:text-teal-700 border border-[#324de7] rounded-md px-4 py-1.5'
+                className='inline-flex items-center text-[#ffffff] hover:text-[#f3f3f3] border border-[#ffffff] rounded-md px-4 py-1.5'
               >
                 <span className='text-xl font-semibold'>Edit</span>
               </Link>

@@ -7,7 +7,7 @@ import { useGetTrustAndSafetyQuery } from "@/redux/feature/settingAPI";
 
 export default function TermsConditionPage() {
   const { data, isLoading } = useGetTrustAndSafetyQuery({});
-  console.log(data?.data[0]?.description);
+
   return (
     <div className='flex min-h-screen bg-linear-to-r from-[#315D62] to-[#6ECEDA]'>
       <div className='flex-1 w-full'>
