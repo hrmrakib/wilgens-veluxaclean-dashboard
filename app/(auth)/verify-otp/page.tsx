@@ -2,14 +2,14 @@
 
 import type React from "react";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useVerifyOtpMutation } from "@/redux/feature/authAPI";
 
-export default function VerifyOTP() {
+function VerifyOTP() {
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resendDisabled, setResendDisabled] = useState(false);
@@ -127,22 +127,6 @@ export default function VerifyOTP() {
       <div className='container mx-auto space-y-8 flex flex-col md:flex-row items-center z-50'>
         <div className='w-full md:w-1/2 max-w-lg mx-auto bg-authFormBg px-6 py-16 rounded-xl'>
           <div className='text-center flex items-center justify-center space-x-2.5'>
-            {/* <svg
-              width='24'
-              height='24'
-              viewBox='0 0 24 24'
-              fill='none'
-              xmlns='http://www.w3.org/2000/svg'
-            >
-              <path
-                d='M10 19L3 12M3 12L10 5M3 12L21 12'
-                stroke='#4F3E19'
-                strokeWidth='2'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-              />
-            </svg> */}
-
             <h1 className='text-[32px] font-semibold text-authFormColor'>
               Verify with OTP
             </h1>
@@ -209,5 +193,13 @@ export default function VerifyOTP() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OTPPage() {
+  return (
+    <Suspense>
+      <VerifyOTP />
+    </Suspense>
   );
 }
