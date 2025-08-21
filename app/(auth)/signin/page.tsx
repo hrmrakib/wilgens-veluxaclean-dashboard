@@ -84,9 +84,10 @@ export default function SignInPage() {
       }
 
       // In a real app, you would redirect to dashboard or home page after successful login
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting form:", error);
       setErrors({ submit: "Invalid credentials. Please try again." });
+      toast.error(error?.data?.message || "Login failed. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
